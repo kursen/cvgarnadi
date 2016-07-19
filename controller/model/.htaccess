@@ -1,0 +1,10 @@
+Options -Indexes
+#IndexIgnore ~"/controller"
+<Files *.php>
+	Order deny,allow
+	deny from all
+	#allow from localhost
+	#Allow from 127.0.0.1
+	allow from ::1
+</Files>
+#deny from all

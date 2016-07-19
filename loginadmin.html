@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Admin</title>
+
+    <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+ <link href="css/bootstrap-theme.min.css" rel="stylesheet"/>
+ <link href="css/bootstrapValidator.min.css" rel="stylesheet"/>
+ <link href="css/alertify.min.css" rel="stylesheet"/>
+ <link href="css/themes/default.min.css" rel="stylesheet"/>
+ 
+ <script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrapValidator.min.js"></script>
+<script src="js/alertify.min.js"></script>
+
+</head>
+
+<body>
+<p><br/><br/><br/><br/></p>
+<div class="col-md-4"></div>
+ <div class="container">
+      <div class="row">  
+  <div class="col-md-4">
+       <div class="panel panel-default">
+       <div class="panel-body">
+          <div class="page-header">
+         <h3>Login Admin Area <i class="glyphicon glyphicon-lock"></i></h3>
+      </div>
+      <form id="login-form" action="controller/prosesloginadmin.php" method="post" accept-charset="utf-8" role="form">
+         <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-group">
+           <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+           <input type="text" class="form-control" name="username" placeholder="Enter username" required />
+        </div>
+         </div>
+         <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-group">
+           <span class="input-group-addon"><span class="glyphicon glyphicon-star"></span></span>
+           <input type="password" class="form-control" name="password" placeholder="Password" required />
+        </div>
+         </div>
+         <hr/>
+         
+         <button type="submit" class="btn btn-primary" id="btn-submit"><span class="glyphicon glyphicon-lock"></span> Login</button>
+		 <a href="Index.php" class="btn btn-success"><span class="glyphicon glyphicon-chevron-left"></span> Kembali</a>
+         <p>
+</p>
+      </form>
+       </div>
+    </div>
+    
+     </div>
+  </div>
+    </div>
+ 
+ <script type='text/javascript'>
+ $('#login-form').bootstrapValidator({
+				live: 'enabled',
+				message: 'This value is not Valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				excluded:'disabled',
+				fields: {
+					username: {
+						validators: {
+							notEmpty: {
+								message: 'Silahkan isi username'
+							}
+						}
+					},
+					password: {
+						validators: {
+							notEmpty: {
+								message: 'Silahkan isi password'
+							}
+							
+						}
+					}
+					
+				}
+			}).on('success.form.bv', function (e) {
+        // Prevent form submission
+				e.preventDefault();
+				// Get the form instance
+				var $form = $(e.target);
+				// Get the BootstrapValidator instance
+				var bv = $form.data('bootstrapValidator');
+				// Use Ajax to submit form data
+				
+				//formData.append('file','file);
+				var data = $form.serialize();
+				$('#login-form input').attr("disabled", "disabled");
+				$.ajax({
+					type: 'POST',
+					url: $form.attr('action'),
+					data: data,
+					dataType: 'json',
+					success: function (data) {
+						data.stat = parseInt(data.stat);
+						console.log(data.stat);
+						if(data.stat==1){
+							window.location.href='administrator/index.php';
+						}else{
+							alertify.error('Data Tidak ditemukan');
+							$('#btnsubmit').removeAttr('disabled');
+						$('#login-form input').removeAttr("disabled", "disabled");
+						}
+						return false;
+					},
+					error: function (xhr,textStatus,errormessage) {
+						alertify.alert("Kesalahan! ","Error !!"+xhr.status+" "+textStatus+" "+errormessage);
+					},
+					complete: function () {
+						$('#btnsubmit').removeAttr('disabled');
+						$('#login-form input').removeAttr("disabled", "disabled");
+					}
+				});
+		});
+ </script>
+</body>
+</html>
